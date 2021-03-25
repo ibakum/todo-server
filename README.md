@@ -1,1 +1,2 @@
-# todo-server
+# todo-server (NodeJS, Express, PostgreSQL)
+
