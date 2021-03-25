@@ -29,7 +29,6 @@ module.exports.createPost = async function (req, res) {
             completed: Joi.boolean()
         });
         const {value: {text, completed}, error} = schema.validate(req.body);
-        console.log(req.body)
         if (error) {
 
             return res.status(422).json({
@@ -48,30 +47,44 @@ module.exports.createPost = async function (req, res) {
     }
 }
 
+module.exports.getPostById = async function (req, res) {
+    try {
+        const data = await Post.findByPk(req.params.id)
+        res.send(data);
+    } catch (err) {
+        return Error(res);
+    }
+};
 
-// User.findAll({where:{name: "Tom"}, raw: true })
-//     .then(users=>{
-//         console.log(users);
-//     }).catch(err=>console.log(err));
-//
-// User.findByPk(2)
-//     .then(user=>{
-//         if(!user) return; // если пользователь не найден
-//         console.log(user.name);
-//     }).catch(err=>console.log(err));
-//
-// User.update({ age: 36 }, {
-//     where: {
-//         name: "Bob"
-//     }
-// }).then((res) => {
-//     console.log(res);
-// });
-//
-// User.destroy({
-//     where: {
-//         name: "Bob"
-//     }
-// }).then((res) => {
-//     console.log(res);
-// });
+module.exports.updatePost = async function (req, res) {
+    try {
+        const {text, completed} = req.body;
+        console.log(req.params.id);
+        const data = await Post.update({
+            text,
+            completed
+        }, {
+            where: {
+                id: req.params.id
+            },
+            returning: true,
+        })
+        console.log(data);
+        res.send(data);
+    } catch (err) {
+        return Error(res);
+    }
+};
+
+module.exports.deletePost = async function (req, res) {
+    try {
+        const data = await Post.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        res.send(data);
+    } catch (err) {
+        return Error(res);
+    }
+};

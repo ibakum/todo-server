@@ -10,7 +10,7 @@ app.use("/api", postsRouter)
 
 app.listen(3000, function () {
     console.log('Сервер ожидает подключения...')
-    Post.sequelize.sync().then(result=>{
+    Post.sequelize.sync({ force: true }).then(result=>{
         console.log('Подключение к базе данных...')
     }).catch(err=>console.log(err))
 })
