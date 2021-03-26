@@ -1,16 +1,18 @@
 const express = require('express');
-const app = express()
+const app = express();
 const Sequelize = require("sequelize");
 const sequelize = require('./util/database');
-const Post = require('./models')
+const models = require('./models');
+const router = require('./routes/posts.js');
 
-const postsRouter = require('./routes');
 
-app.use("/api", postsRouter)
+app.use("/api", router);
+// app.use("/api", usersRouter);
 
 app.listen(3000, function () {
     console.log('Сервер ожидает подключения...')
-    Post.sequelize.sync({ force: true }).then(result=>{
+    models.sequelize.sync().then(result=>{
         console.log('Подключение к базе данных...')
     }).catch(err=>console.log(err))
 })
+// { force: true }

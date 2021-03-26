@@ -2,26 +2,31 @@ const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 
 module.exports = (sequelize, DataTypes) => {
-    const Post = sequelize.define("post", {
+    const User = sequelize.define("user", {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
-        text: {
+        name: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        completed: {
-            type: Sequelize.BOOLEAN,
+        email: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
+        },
+        password: {
+            type: Sequelize.STRING,
             allowNull: false
         }
     });
 
-    Post.associate = (models) => {
-        //Post.belongsTo...
+    User.associate = (models) => {
     }
 
-    return Post;
+    return User;
 };

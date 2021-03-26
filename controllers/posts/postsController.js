@@ -3,8 +3,9 @@ const sequelize = new Sequelize("posts", "postgres", "user", {
     dialect: "postgres",
     host: "localhost"
 });
+// const sequelize = require("../util/database");
 const Joi = require('joi');
-const Post = require('../../models')
+const Post = require('../../models/post')
 
 function Error(response) {
     return response.status(500).json({

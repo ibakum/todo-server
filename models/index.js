@@ -5,12 +5,16 @@ const sequelize = new Sequelize("posts", "postgres", "user", {
 });
 const path = require('path');
 
-let models = require(path.join(__dirname, './post'))(sequelize, Sequelize.DataTypes)
+const models = {
+    Post: require(path.join(__dirname, './post'))(sequelize, Sequelize.DataTypes),
+    User: require(path.join(__dirname, './user'))(sequelize, Sequelize.DataTypes)
+}
+
 
 Object.keys(models).forEach(modelName => {
-    // if ("associate" in models[modelName]) {
-    //     models[modelName].associate(models);
-    // }
+    if ("associate" in models[modelName]) {
+        models[modelName].associate(models);
+    }
 });
 
 models.sequelize = sequelize;
