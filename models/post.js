@@ -1,20 +1,17 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../util/database");
-
 module.exports = (sequelize, DataTypes) => {
     const Post = sequelize.define("post", {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             allowNull: false
         },
         text: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         completed: {
-            type: Sequelize.BOOLEAN,
+            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     });

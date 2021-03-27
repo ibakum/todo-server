@@ -1,12 +1,12 @@
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("posts", "postgres", "user", {
-    dialect: "postgres",
-    host: "localhost"
-});
-// const sequelize = require("../util/database");
+// const Sequelize = require("sequelize");
+// const sequelize = new Sequelize("posts", "postgres", "user", {
+//     dialect: "postgres",
+//     host: "localhost"
+// });
+// const sequelize = require("../../util/database");
 const Joi = require('joi');
-const Post = require('../../models/post')
-
+const models = require('../../models')
+const Post = models.Post;
 function Error(response) {
     return response.status(500).json({
         message: 'server error'
@@ -43,7 +43,6 @@ module.exports.createPost = async function (req, res) {
         })
         return res.send(post)
     } catch (err) {
-        console.log(err)
         return Error(res)
     }
 }

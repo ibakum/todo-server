@@ -3,11 +3,9 @@ const app = express();
 const Sequelize = require("sequelize");
 const sequelize = require('./util/database');
 const models = require('./models');
-const router = require('./routes/posts.js');
-
+const router = require('./routes');
 
 app.use("/api", router);
-// app.use("/api", usersRouter);
 
 app.listen(3000, function () {
     console.log('Сервер ожидает подключения...')
