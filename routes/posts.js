@@ -10,10 +10,10 @@ const posts_controller = require('../controllers/posts');
 //     next();
 // });
 
-postsRouter.get("/posts", posts_controller.getPosts);
-postsRouter.get("/posts/:id", posts_controller.getPostById);
-postsRouter.post('/posts', jsonParser, posts_controller.createPost);
-postsRouter.put('/posts/:id', jsonParser, posts_controller.updatePost);
-postsRouter.delete('/posts/:id', jsonParser, posts_controller.deletePost);
+postsRouter.get("/", posts_controller.getPosts);
+postsRouter.get("/:id", posts_controller.getPostById);
+postsRouter.post('/', jsonParser, posts_controller.createPost);
+postsRouter.put('/:id', jsonParser, posts_controller.updatePost);
+postsRouter.delete('/:id', jsonParser, posts_controller.deletePost);
 
 module.exports = postsRouter;
