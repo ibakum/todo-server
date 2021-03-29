@@ -5,6 +5,7 @@ const sequelize = require('./util/database');
 const models = require('./models');
 const router = require('./routes');
 
+app.use(express.json());
 app.use("/api", router);
 
 app.listen(3000, function () {

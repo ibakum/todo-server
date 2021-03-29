@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         text: {
             type: DataTypes.STRING,
             allowNull: false
@@ -16,8 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    Post.associate = (models) => {
-        //Post.belongsTo...
+    Post.associate = function (models) {
+        Post.belongsTo(models.User, {
+            foreignKey: 'userId',
+            onDelete: 'CASCADE'
+        })
     }
 
     return Post;
