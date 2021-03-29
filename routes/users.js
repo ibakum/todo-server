@@ -9,6 +9,4 @@ usersRouter.get("/users", users_controller.getUsers);
 usersRouter.post("/users", jsonParser, users_controller.createUser);
 usersRouter.post('/users/login', jsonParser, users_controller.checkUser);
 
-// app.use("/api", usersRouter);
-
 module.exports = usersRouter;

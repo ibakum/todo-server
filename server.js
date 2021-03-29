@@ -9,8 +9,7 @@ app.use("/api", router);
 
 app.listen(3000, function () {
     console.log('Сервер ожидает подключения...')
-    models.sequelize.sync().then(result=>{
+    models.User.sequelize.sync({ force: true }).then(result=>{
         console.log('Подключение к базе данных...')
     }).catch(err=>console.log(err))
 })
-// { force: true }

@@ -1,1 +1,1 @@
-module.exports = require('./authenticationController');
+module.exports = require('./authenticationController.js');
