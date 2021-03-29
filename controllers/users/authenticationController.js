@@ -28,14 +28,14 @@ module.exports.createUser = async (req, res) => {
 }
 
 module.exports.checkUser = async (req, res) => {
-    const user = await User.findOne({ where: {name: req.body.name}})
+    const user = await User.findOne({ where: { name: req.body.name }})
     if(user === null) {
         return res.status(400).send('Cannot find user')
     }
     try {
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
         if (isValidPassword) {
-            const payload = {id: user.id};
+            const payload = { id: user.id };
             const token = jwt.sign(payload, config.jwtSecret, {
                 expiresIn: config.tokenExpireTime})
             res.send({token})

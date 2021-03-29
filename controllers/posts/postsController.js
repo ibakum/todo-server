@@ -68,7 +68,7 @@ module.exports.createPost = async function (req, res) {
 
 module.exports.updatePost = async function (req, res) {
     try {
-        const {userId, text, completed} = req.body;
+        const { userId, text, completed } = req.body;
         const data = await Post.update({
             userId,
             text,
