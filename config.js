@@ -1,4 +1,5 @@
 module.exports = {
     jwtSecret: 'yo-its-a-secret',
-    tokenExpireTime: '6h'
+    jwtRefreshSecret: 'its-a-secret',
+    tokenExpireTime: '1h'
 }

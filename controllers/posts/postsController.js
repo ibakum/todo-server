@@ -17,7 +17,6 @@ function customError(response) {
 
 module.exports.getPosts = async function (req, res) {
     try {
-        console.log(req)
         const data = await Post.findAll({
             where: {
                 userId: req.user.id

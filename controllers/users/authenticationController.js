@@ -4,13 +4,8 @@ const User = models.User;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config =  require('../../config');
-
-function Error(response) {
-    return response.status(500).json({
-        message: 'server error'
-    })
-}
-
+const customError = require('../../services/customError.js')
+const Token = require('../../services/token.js')
 
 module.exports.createUser = async (req, res) => {
     try {
@@ -23,7 +18,7 @@ module.exports.createUser = async (req, res) => {
         })
         return res.send(user)
     } catch (err) {
-        return Error(res);
+        return customError(res);
     }
 }
 
@@ -35,16 +30,32 @@ module.exports.checkUser = async (req, res) => {
     try {
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
         if (isValidPassword) {
-            const payload = { id: user.id };
-            const token = jwt.sign(payload, config.jwtSecret, {
-                expiresIn: config.tokenExpireTime})
-            res.send({token})
+            Token.addToken(user)
+            res.json(Token.tokens.get(user.id))
         } else {
             res.send('Not Allowed')
         }
     } catch (err) {
-        return Error(res);
+        return customError(res);
     }
 }
 
+module.exports.createRefreshToken = (req, res) => {
+    const refreshToken = req.body.token
+    if(refreshToken === null) {
+        return res.sendStatus(401)
+    }
+    jwt.verify(refreshToken, config.jwtRefreshSecret, (err, user) => {
+        if(err){
+            return res.sendStatus(403)
+        }
+        Token.addToken(user)
+        res.json(Token.tokens.get(user.id))
+    })
+}
+
+module.exports.deleteToken =  (req, res) => {
+    Token.deleteToken(req.body.id)
+    res.sendStatus(204)
+}
 
