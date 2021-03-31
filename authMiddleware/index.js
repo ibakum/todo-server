@@ -8,20 +8,23 @@ const checkAuth = (req, res, next) => {
     if (!token) {
          return res.status(403).send({ auth: false, message: 'No token provided.' });
     }
-    jwt.verify(token, config.jwtSecret, (err, decoded) => {
+    jwt.verify(token, config.jwtSecret, async (err, decoded) => {
         if (err) {
             console.log(err)
             return res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
         }
-        Token.addToken({ id: decoded.id })
-        console.log(token)
-        if (token === Token.tokens.get(decoded.id)){
-            console.log(token)
-            console.log('Success')
+        try {
+            const tokenFromStorage = await Token.getToken(decoded.id)
+            if (token === tokenFromStorage.accessToken){
+                req.user = { id: decoded.id };
+                next();
+            } else {
+                throw Error('Invalid token');
+            }
+        } catch (e) {
+            return res.status(401).send({auth: false, message: 'Invalid token.'});
         }
-        req.user = { id: decoded.id };
-        console.log(Token.tokens.get({id: decoded.id}))
-        next();
+
     });
 }
 

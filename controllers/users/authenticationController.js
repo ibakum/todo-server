@@ -7,7 +7,7 @@ const config =  require('../../config');
 const customError = require('../../services/customError.js')
 const Token = require('../../services/token.js')
 
-module.exports.createUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
@@ -22,7 +22,7 @@ module.exports.createUser = async (req, res) => {
     }
 }
 
-module.exports.checkUser = async (req, res) => {
+module.exports.loginUser = async (req, res) => {
     const user = await User.findOne({ where: { name: req.body.name }})
     if(user === null) {
         return res.status(400).send('Cannot find user')
@@ -30,8 +30,8 @@ module.exports.checkUser = async (req, res) => {
     try {
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
         if (isValidPassword) {
-            Token.addToken(user)
-            res.json(Token.tokens.get(user.id))
+            await Token.addToken(user)
+            res.json(await Token.getToken(user.id))
         } else {
             res.send('Not Allowed')
         }
@@ -45,17 +45,20 @@ module.exports.createRefreshToken = (req, res) => {
     if(refreshToken === null) {
         return res.sendStatus(401)
     }
-    jwt.verify(refreshToken, config.jwtRefreshSecret, (err, user) => {
-        if(err){
-            return res.sendStatus(403)
+    jwt.verify(refreshToken, config.jwtRefreshSecret, async (err, user) => {
+        try {
+            if(err){
+                return res.sendStatus(403)
+            }
+            await Token.addToken({ id: user.id })
+            res.json(await Token.getToken(user.id))
+        } catch (err) {
+            return customError(res);
         }
-        Token.addToken(user)
-        res.json(Token.tokens.get(user.id))
     })
 }
 
-module.exports.deleteToken =  (req, res) => {
-    Token.deleteToken(req.body.id)
+module.exports.deleteToken =  async (req, res) => {
+    await Token.deleteToken(req.user.id)
     res.sendStatus(204)
 }
-

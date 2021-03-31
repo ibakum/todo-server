@@ -1,12 +1,10 @@
 const config =  require('../config');
 const jwt = require('jsonwebtoken');
-const redis = require("redis");
-const client = redis.createClient();
-const { promisify } = require("util");
+const Client = require('../services/redis.js');
 
 class Token {
-    constructor() {
-        this._tokens = promisify(client.get).bind(client);
+    constructor(client) {
+        this._redis = client;
     }
 
     _generateAccessToken(user) {
@@ -20,22 +18,22 @@ class Token {
         return jwt.sign(payload, config.jwtRefreshSecret)
     }
 
-    addToken(user) {
+    async addToken(user) {
         const token = {
             accessToken: this._generateAccessToken(user),
             refreshToken: this._generateRefreshToken(user)
         }
-        this._tokens.set( user.id, token )
+        await this._redis.set( user.id, token )
     }
 
-    deleteToken(id) {
-        this._tokens.delete(id)
+    async getToken(id) {
+        return await this._redis.get(id)
     }
 
-    get tokens(){
-        return this._tokens;
+    async deleteToken(id) {
+        return await this._redis.clear(id)
     }
 }
-// const tokenService = new Token();
-module.exports = new Token();
+
+module.exports = new Token(Client);
 
