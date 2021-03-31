@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const Sequelize = require("sequelize");
-const sequelize = require('./util/database');
 const models = require('./models');
 const router = require('./routes');
 
@@ -27,5 +25,3 @@ app.listen(3000, function () {
         console.log('Подключение к базе данных...')
     }).catch(err=>console.log(err))
 })
-
-// { force: true }

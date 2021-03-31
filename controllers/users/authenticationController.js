@@ -46,10 +46,10 @@ module.exports.createRefreshToken = (req, res) => {
         return res.sendStatus(401)
     }
     jwt.verify(refreshToken, config.jwtRefreshSecret, async (err, user) => {
+        if (err) {
+            return customError(res);
+        }
         try {
-            if(err){
-                return res.sendStatus(403)
-            }
             await Token.addToken({ id: user.id })
             res.json(await Token.getToken(user.id))
         } catch (err) {

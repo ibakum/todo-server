@@ -1,6 +1,5 @@
-const {RedisClient} = require("redis");
+const { RedisClient } = require("redis");
 const { promisify } = require("util");
-const redisPort = 6379;
 
 class Client {
     constructor() {

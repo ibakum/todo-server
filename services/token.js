@@ -1,6 +1,6 @@
-const config =  require('../config');
 const jwt = require('jsonwebtoken');
 const Client = require('../services/redis.js');
+const config =  require('../config');
 
 class Token {
     constructor(client) {

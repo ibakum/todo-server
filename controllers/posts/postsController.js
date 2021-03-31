@@ -1,9 +1,3 @@
-// const Sequelize = require("sequelize");
-// const sequelize = new Sequelize("posts", "postgres", "user", {
-//     dialect: "postgres",
-//     host: "localhost"
-// });
-// const sequelize = require("../../util/database");
 const Joi = require('joi');
 const models = require('../../models')
 const Post = models.Post;
