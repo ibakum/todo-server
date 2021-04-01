@@ -2,18 +2,10 @@ const express = require('express');
 const app = express();
 const models = require('./models');
 const router = require('./routes');
+const handleError = require('./services/handleError.js')
 
 app.use(express.json());
 app.use("/api", router);
-
-const handleError = (err, res) => {
-    const { statusCode, message } = err;
-    res.status(statusCode).json({
-        status: "error",
-        statusCode,
-        message
-    });
-};
 
 app.use((err, req, res, next) => {
     handleError(err, res);

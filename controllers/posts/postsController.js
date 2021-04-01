@@ -1,13 +1,7 @@
 const Joi = require('joi');
 const models = require('../../models')
 const Post = models.Post;
-
-
-function customError(response) {
-    return response.status(500).json({
-        message: 'server error'
-    })
-}
+const handleError = require('../../services/handleError.js')
 
 module.exports.getPosts = async function (req, res) {
     try {
@@ -18,7 +12,7 @@ module.exports.getPosts = async function (req, res) {
         })
         res.send(data);
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 };
 
@@ -31,7 +25,7 @@ module.exports.getPostById = async function (req, res) {
             throw new Error('Not authorized');
         }
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 };
 
@@ -55,7 +49,7 @@ module.exports.createPost = async function (req, res) {
         })
         return res.send(post)
     } catch (err) {
-        return customError(res)
+        return handleError(err);
     }
 }
 
@@ -75,7 +69,7 @@ module.exports.updatePost = async function (req, res) {
         })
         res.send(data);
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 };
 
@@ -89,6 +83,6 @@ module.exports.deletePost = async function (req, res) {
         })
         res.send(data);
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 };

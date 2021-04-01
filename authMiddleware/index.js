@@ -6,11 +6,11 @@ const checkAuth = (req, res, next) => {
     const rawToken = req.headers['authorization'];
     const token = rawToken.split(' ')[1];
     if (!token) {
-         return res.status(403).send({ auth: false, message: 'No token provided.' });
+         return res.status(403).send({ auth: false, message: 'Invalid token.' });
     }
     jwt.verify(token, config.jwtSecret, async (err, decoded) => {
         if (err) {
-            return res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
+            return res.status(500).send({auth: false, message: 'Invalid token.'});
         }
         try {
             const tokenFromStorage = await Token.getToken(decoded.id)

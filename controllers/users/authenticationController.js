@@ -1,11 +1,10 @@
-const Joi = require('joi');//validation
-const models = require('../../models')
-const User = models.User;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config =  require('../../config');
-const customError = require('../../services/customError.js')
+const handleError = require('../../services/handleError.js')
 const Token = require('../../services/token.js')
+const models = require('../../models')
+const User = models.User;
 
 module.exports.registerUser = async (req, res) => {
     try {
@@ -18,14 +17,14 @@ module.exports.registerUser = async (req, res) => {
         })
         return res.send(user)
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 }
 
 module.exports.loginUser = async (req, res) => {
     const user = await User.findOne({ where: { name: req.body.name }})
-    if(user === null) {
-        return res.status(400).send('Cannot find user')
+    if(!user) {
+        return res.status(404).send('Cannot find user')
     }
     try {
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
@@ -36,7 +35,7 @@ module.exports.loginUser = async (req, res) => {
             res.send('Not Allowed')
         }
     } catch (err) {
-        return customError(res);
+        return handleError(err);
     }
 }
 
@@ -47,13 +46,13 @@ module.exports.createRefreshToken = (req, res) => {
     }
     jwt.verify(refreshToken, config.jwtRefreshSecret, async (err, user) => {
         if (err) {
-            return customError(res);
+            return handleError(err);
         }
         try {
             await Token.addToken({ id: user.id })
             res.json(await Token.getToken(user.id))
         } catch (err) {
-            return customError(res);
+            return handleError(err);
         }
     })
 }
